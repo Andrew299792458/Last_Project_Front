@@ -1,7 +1,11 @@
+import { useRef } from "react"
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Flex, Box, Input, Button, Heading, Text, useToast } from "@chakra-ui/react"
 import axios from "axios";
+import FormData from "form-data"
+
+
 export function SignUp() {
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
     const navigate = useNavigate()
@@ -24,8 +28,22 @@ export function SignUp() {
             isClosable: true,
         });
     };
+
+    const file = useRef(null);
+
     const signUp = async (data) => {
-        await axios.post("http://localhost:3001/sign-up", data)
+
+        const formData = new FormData();
+
+        formData.append("image", file.current);
+        formData.append("firstName", data.firstName);
+        formData.append("lastName", data.lastName);
+        formData.append("email", data.email);
+        formData.append("age", data.age);
+        formData.append("password", data.password);
+
+
+        await axios.post("http://localhost:3001/sign-up", formData)
             .then(function (res) {
                 console.log(res);
                 navigate("/sign-in")
@@ -37,6 +55,12 @@ export function SignUp() {
                 errorToast()
             });
     };
+
+    const saveImage = (event) => {
+        const image = event.target.files[0];
+        file.current = image;
+    }
+
     return (
         <Flex w="100%"
             h="100vh"
@@ -112,6 +136,11 @@ export function SignUp() {
                         fontSize="xs"
                         color="red"
                     >{errors?.password?.message}</Text>)}
+                    <Input
+                        type="file"
+                        onChange={saveImage}
+                        mt={6}
+                    />
                     <Button type="submit"
                         mt={6}
                     >Sign Up</Button>

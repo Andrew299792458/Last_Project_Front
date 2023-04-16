@@ -6,24 +6,23 @@ import { useNavigate } from "react-router-dom";
 
 export function SignIn() {
 
-
     const navigate = useNavigate()
 
     const toast = useToast();
 
     const successToast = () => {
         return toast({
-            title: 'Success.',
-            status: 'success',
+            title: "Success",
+            status: "success",
             duration: 8000,
             isClosable: true,
         });
     };
     const errorToast = () => {
         return toast({
-            title: 'Sorry.',
+            title: "Sorry",
             description: "Email or password is incorrect",
-            status: 'error',
+            status: "error",
             duration: 8000,
             isClosable: true,
         });
