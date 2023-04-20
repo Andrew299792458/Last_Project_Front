@@ -15,12 +15,13 @@ const useAuth = () => useContext(AuthContext)
 const AuthProvider = ({ children }) => {
 
     const [user, setUser] = useState(getUserFromLocalStorage)
+    const [newMessage, setNewMessage] = useState(false)
 
     const updateUser = (userData) => {
         localStorage.setItem("user", JSON.stringify(userData))
         setUser(userData)
     }
- 
+
     const token = localStorage.getItem("userToken");
 
     useEffect(() => {
@@ -38,7 +39,7 @@ const AuthProvider = ({ children }) => {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ user, updateUser }}>
+        <AuthContext.Provider value={{ user, updateUser, newMessage, setNewMessage, setUser }}>
             {children}
         </AuthContext.Provider>
 

@@ -1,6 +1,6 @@
 import axios from "axios"
 import { useState, useEffect } from "react";
-import { Box, Button, Flex } from "@chakra-ui/react"
+import { Box, Button, Flex, color } from "@chakra-ui/react"
 import Chat from "../components/Chat.jsx"
 import { useAuth } from "../contexts/AuthContext"
 
@@ -9,8 +9,7 @@ export function AllUsers() {
     const [chat, setChat] = useState(false)
     const [users, setUsers] = useState([])
     const [to, setTo] = useState("")
-    const { user } = useAuth()
-
+    const { user, newMessage, setNewMessage } = useAuth()
 
     useEffect(() => {
         axios.get("http://localhost:3001/users", {
@@ -24,13 +23,14 @@ export function AllUsers() {
                 console.log(err)
             });
     }, [])
+
     const Send = (id) => {
         setChat(true)
         setTo(id)
+        setNewMessage(false)
     }
 
     return (<>
-
         <Flex
             gap={10}>
             {users ? users.map((user) => {
@@ -46,13 +46,13 @@ export function AllUsers() {
                     <h2>{user.firstName}</h2>
                     <p>{user.lastName}</p>
                     <p>{user.age}</p>
-                    <Button onClick={() => Send(user._id)}>Write Message</Button>
+                    <Button color={to === user._id && chat === false ? "red" : null} onClick={() => Send(user._id)}>Start Chat</Button>
                 </div>
             }) : <div>no users</div>}
 
         </Flex>
         <Box>
-            {chat ? <Chat to={to} /> : null}
+            <Chat to={to} chat={chat} setTo={setTo} />
         </Box>
     </>)
 
